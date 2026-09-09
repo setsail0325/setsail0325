@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>스마트폰 디지털 역량 자가진단</title>
+  <!-- Google Noto Sans KR 폰트 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #15803d;       /* 신뢰감 주는 진초록 */
+      --primary-dark: #166534;
+      --secondary: #0284c7;     /* 맑은 파랑 */
+      --accent: #b91c1c;        /* 주목도 높은 빨강 */
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #1e293b;
+      --border: #cbd5e1;
+      --highlight: #fef08a;     /* 연노랑 강조 */
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      font-family: 'Noto Sans KR', sans-serif;
+    }
+
+    body {
+      background-color: #e2e8f0;
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+      font-size: 20px;
+      line-height: 1.6;
+    }
+
+    #app-container {
+      width: 100%;
+      max-width: 540px;
+      min-height: 100vh;
+      background: var(--card-bg);
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      position: relative;
+    }
+
+    /* 상단 헤더 */
+    header {
+      background-color: var(--primary);
+      color: #ffffff;
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .header-title {
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+    }
+
+    .tts-toggle-btn {
+      background-color: #ffffff;
+      color: var(--primary-dark);
+      border: 3px solid #facc15;
+      padding: 8px 14px;
+      border-radius: 30px;
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* 콘텐츠 본문 영역 */
+    main {
+      flex: 1;
+      padding: 24px 20px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* 공통 큰 버튼 */
+    .btn-large {
+      width: 100%;
+      min-height: 72px;
+      font-size: 24px;
+      font-weight: 900;
+      border-radius: 16px;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      transition: all 0.15s ease-in-out;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    .btn-large:active {
+      transform: scale(0.98);
+    }
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+    .btn-primary:active {
+      background-color: var(--primary-dark);
+    }
+    .btn-secondary {
+      background-color: #64748b;
+      color: white;
+    }
+
+    /* 1. 로그인 화면 */
+    .login-box {
+      margin: auto 0;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      text-align: center;
+    }
+    .icon-welcome {
+      font-size: 64px;
+      margin-bottom: 8px;
+    }
+    .login-title {
+      font-size: 28px;
+      font-weight: 900;
+      color: #0f172a;
+      line-height: 1.4;
+    }
+    .login-desc {
+      font-size: 20px;
+      color: #475569;
+      margin-bottom: 10px;
+    }
+    .input-name {
+      width: 100%;
+      height: 74px;
+      font-size: 24px;
+      font-weight: 700;
+      padding: 0 20px;
+      border: 3px solid var(--primary);
+      border-radius: 16px;
+      text-align: center;
+      outline: none;
+    }
+    .input-name:focus {
+      border-color: #0284c7;
+      background-color: #f0fdf4;
+    }
+
+    /* 2. 질문 화면 */
+    .progress-bar-wrap {
+      margin-bottom: 20px;
+    }
+    .progress-text {
+      display: flex;
+      justify-content: space-between;
+      font-size: 20px;
+      font-weight: 900;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+    .progress-track {
+      height: 16px;
+      background: #e2e8f0;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--primary);
+      transition: width 0.3s ease;
+    }
+
+    .question-card {
+      background: #ffffff;
+      border: 2px solid #e2e8f0;
+      border-radius: 20px;
+      padding: 24px 18px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+    .question-category {
+      display: inline-block;
+      background: #dcfce7;
+      color: var(--primary-dark);
+      font-size: 18px;
+      font-weight: 900;
+      padding: 4px 14px;
+      border-radius: 10px;
+      margin-bottom: 12px;
+    }
+    .question-title {
+      font-size: 26px;
+      font-weight: 900;
+      line-height: 1.45;
+      color: #0f172a;
+      margin-bottom: 8px;
+    }
+    .question-sub {
+      font-size: 19px;
+      color: #64748b;
+      font-weight: 500;
+    }
+
+    .options-group {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .option-btn {
+      min-height: 80px;
+      border-radius: 18px;
+      border: 3px solid #cbd5e1;
+      background: #ffffff;
+      color: #1e293b;
+      font-size: 22px;
+      font-weight: 900;
+      padding: 12px 18px;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .option-btn .check-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 3px solid #94a3b8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .option-btn.selected {
+      border-color: var(--primary);
+      background-color: #f0fdf4;
+      color: var(--primary-dark);
+    }
+    .option-btn.selected .check-circle {
+      background-color: var(--primary);
+      border-color: var(--primary);
+      color: #ffffff;
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: auto;
+    }
+
+    /* 3. 결과 화면 */
+    .result-section {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      padding-bottom: 40px;
+    }
+
+    .score-banner {
+      background: #f8fafc;
+      border: 3px solid #e2e8f0;
+      border-radius: 24px;
+      padding: 24px;
+      text-align: center;
+    }
+    .score-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #475569;
+    }
+    .score-number {
+      font-size: 68px;
+      font-weight: 900;
+      color: var(--primary);
+      line-height: 1.1;
+      margin: 10px 0;
+    }
+    .score-badge {
+      display: inline-block;
+      font-size: 24px;
+      font-weight: 900;
+      background: #fef08a;
+      color: #854d0e;
+      padding: 6px 20px;
+      border-radius: 30px;
+      border: 2px solid #eab308;
+    }
+    .encouragement-text {
+      font-size: 22px;
+      font-weight: 700;
+      color: #0f172a;
+      background: #eff6ff;
+      border-left: 6px solid var(--secondary);
+      padding: 16px;
+      border-radius: 10px;
+      margin-top: 14px;
+    }
+
+    .card-block {
+      background: white;
+      border: 2px solid #e2e8f0;
+      border-radius: 20px;
+      padding: 20px;
+    }
+    .card-block-title {
+      font-size: 23px;
+      font-weight: 900;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .skill-tag-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .skill-tag-item {
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-size: 20px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .tag-good {
+      background: #f0fdf4;
+      border: 2px solid #86efac;
+      color: #166534;
+    }
+    .tag-practice {
+      background: #fef2f2;
+      border: 2px solid #fca5a5;
+      color: #991b1b;
+    }
+
+    /* 부족한 역량 사용방법 */
+    .guide-accordion {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .guide-card {
+      border: 2px solid #e2e8f0;
+      border-radius: 16px;
+      overflow: hidden;
+      background: #ffffff;
+    }
+    .guide-card-header {
+      background: #f8fafc;
+      padding: 16px 18px;
+      font-size: 22px;
+      font-weight: 900;
+      border-bottom: 2px solid #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .guide-card-body {
+      padding: 18px;
+    }
+    .step-item {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 14px;
+      font-size: 20px;
+      line-height: 1.5;
+    }
+    .step-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 18px;
+      margin-top: 3px;
+    }
+    .video-btn {
+      width: 100%;
+      min-height: 54px;
+      background: #ff0000;
+      color: #ffffff;
+      border: none;
+      border-radius: 12px;
+      font-size: 19px;
+      font-weight: 900;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    /* 동영상 팝업 모달 */
+    #video-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.85);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .modal-content {
+      background: white;
+      width: 100%;
+      max-width: 520px;
+      border-radius: 20px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .video-frame-container {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #000;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .video-frame-container iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+
+<div id="app-container">
+  <!-- 상단 바 -->
+  <header>
+    <div class="header-title">스마트폰 역량진단</div>
+    <button class="tts-toggle-btn" id="ttsToggleBtn" onclick="toggleTTS()">
+      <span id="ttsIcon">🔊</span>
+      <span id="ttsText">소리 켬</span>
+    </button>
+  </header>
+
+  <!-- 메인 화면 체인저 -->
+  <main id="main-content">
+    <!-- JS 동적 렌더링 -->
+  </main>
+</div>
+
+<!-- 교육 동영상 팝업 모달 -->
+<div id="video-modal">
+  <div class="modal-content">
+    <h3 id="video-modal-title" style="font-size:22px; font-weight:900;">사용 방법 영상</h3>
+    <div class="video-frame-container">
+      <iframe id="video-frame" src="" allowfullscreen allow="autoplay"></iframe>
+    </div>
+    <button class="btn-large btn-secondary" style="min-height:60px; font-size:22px;" onclick="closeVideoModal()">영상 닫기</button>
+  </div>
+</div>
+
+<script>
+  /* ============================================================
+     1. 질문 데이터 및 맞춤 사용방법/교육영상 가이드
+  ============================================================ */
+  const questionsData = [
+    {
+      id: 1,
+      cat: "전화·문자",
+      title: "전화번호를 새로 저장하고, 문자메시지를 보낼 수 있나요?",
+      sub: "새로운 친구나 가족의 번호를 스마트폰에 등록하는 기능입니다.",
+      guide: {
+        steps: [
+          "스마트폰의 초록색 '전화' 앱을 누릅니다.",
+          "화면 아래 '키패드'에서 상대방 전화번호를 입력합니다.",
+          "화면에 나오는 '+ 새 연락처 등록'을 누른 뒤 이름을 적고 '저장'을 누르면 완료됩니다."
+        ],
+        videoUrl: "https://www.youtube.com/embed/5m3l3qPqYqg?autoplay=1"
+      }
+    },
+    {
+      id: 2,
+      cat: "카카오톡",
+      title: "카카오톡으로 가족이나 지인에게 글과 사진을 보낼 수 있나요?",
+      sub: "채팅방에서 안부 글을 쓰고 예쁜 꽃 사진을 함께 보내는 기능입니다.",
+      guide: {
+        steps: [
+          "노란색 '카카오톡' 앱을 열고 메시지를 보낼 친구를 누릅니다.",
+          "화면 맨 아래 왼쪽의 더하기(+) 모양 버튼을 누릅니다.",
+          "'앨범'을 누르고 보낼 사진을 선택한 뒤 오른쪽 위 '전송'을 누릅니다."
+        ],
+        videoUrl: "https://www.youtube.com/embed/kJQP7kiw5Fk?autoplay=1"
+      }
+    },
+    {
+      id: 3,
+      cat: "사진 촬영",
+      title: "카메라로 사진을 선명하게 찍고, 사진첩(갤러리)에서 찾아볼 수 있나요?",
+      sub: "손자녀나 여행 풍경을 찍고 지난 사진을 다시 감상하는 기능입니다.",
+      guide: {
+        steps: [
+          "'카메라' 앱을 켜고 화면 한가운데를 가볍게 터치해 초점을 맞춥니다.",
+          "아래쪽 동그란 '촬영 버튼'을 눌러 사진을 찍습니다.",
+          "'갤러리' 앱을 열면 방금 찍은 사진을 크게 볼 수 있습니다."
+        ],
+        videoUrl: "https://www.youtube.com/embed/5m3l3qPqYqg?autoplay=1"
+      }
+    },
+    {
+      id: 4,
+      cat: "유튜브 검색",
+      title: "유튜브에서 좋아하는 노래나 건강 정보 영상을 스스로 검색해서 보나요?",
+      sub: "돋보기 버튼을 눌러 내가 원하는 트로트나 운동법을 찾는 방법입니다.",
+      guide: {
+        steps: [
+          "빨간색 '유튜브(YouTube)' 앱을 실행합니다.",
+          "화면 오른쪽 위 '돋보기' 아이콘을 누릅니다.",
+          "마이크 버튼을 눌러 말로 하거나, 글자로 '무릎 운동법'을 적고 돋보기를 누릅니다."
+        ],
+        videoUrl: "https://www.youtube.com/embed/kJQP7kiw5Fk?autoplay=1"
+      }
+    },
+    {
+      id: 5,
+      cat: "길찾기·지도",
+      title: "지도 앱(네이버 지도·카카오맵)으로 버스 번호나 목적지 길을 찾을 수 있나요?",
+      sub: "병원이나 약속 장소에 몇 번 버스를 타고 가는지 알아보는 기능입니다.",
+      guide: {
+        steps: [
+          "'네이버 지도' 또는 '카카오맵' 앱을 엽니다.",
+          "맨 위 검색창에 가고 싶은 병원이나 장소 이름을 입력합니다.",
+          "파란색 '길찾기'를 누르고 '대중교통' 아이콘을 누르면 탈 버스 번호가 나옵니다."
+        ],
+        videoUrl: "https://www.youtube.com/embed/5m3l3qPqYqg?autoplay=1"
+      }
+    },
+    {
+      id: 6,
+      cat: "QR코드",
+      title: "카메라나 카카오톡으로 네모난 QR코드를 비춰서 연결할 수 있나요?",
+      sub: "식당, 미술관, 복지관 등에서 안내 정보를 열어볼 때 쓰입니다.",
+      guide: {
+        steps: [
+          "스마트폰 기본 '카메라' 앱을 켭니다.",
+          "안내판에 있는 네모난 QR코드를 화면 가운데에 비춥니다.",
+          "화면에 노란색 링크 주소가 뜨면 손가락으로 가볍게 터치합니다."
+        ],
+        videoUrl: "https://www.youtube.com/embed/kJQP7kiw5Fk?autoplay=1"
+      }
+    },
+    {
+      id: 7,
+      cat: "앱 설치",
+      title: "플레이스토어(앱스토어)에서 내가 필요한 새로운 앱을 설치할 수 있나요?",
+      sub: "날씨, 은행, 건강 앱 등 필요한 프로그램을 내려받는 방법입니다.",
+      guide: {
+        steps: [
+          "삼각형 모양의 알록달록한 'Play 스토어' 앱을 엽니다.",
+          "상단 검색창에 설치하고 싶은 앱 이름(예: 고속버스예매)을 입력합니다.",
+          "초록색 '설치' 버튼을 누르고 잠시 기다리면 홈 화면에 생성됩니다."
+        ],
+        videoUrl: "https://www.youtube.com/embed/5m3l3qPqYqg?autoplay=1"
+      }
+    },
+    {
+      id: 8,
+      cat: "인터넷 검색",
+      title: "인터넷(네이버·다음)에서 궁금한 날씨나 뉴스, 정보를 찾아보시나요?",
+      sub: "오늘 비가 오는지, 미세먼지는 어떤지 확인하는 일상 검색입니다.",
+      guide: {
+        steps: [
+          "'네이버' 또는 '인터넷' 아이콘을 누릅니다.",
+          "검색창에 오늘 날씨나 궁금한 뉴스를 입력합니다.",
+          "검색 버튼을 누르고 나오는 제목을 누르면 자세한 내용이 펼쳐집니다."
+        ],
+        videoUrl: "https://www.youtube.com/embed/5m3l3qPqYqg?autoplay=1"
+      }
+    },
+    {
+      id: 9,
+      cat: "보이스피싱 예방",
+      title: "가족 사칭 문자나 모르는 전화의 수상한 링크(파란 주소)를 누르지 않고 확인하나요?",
+      sub: "'엄마 나 폰 고장났어' 같은 문자나 의심스러운 인터넷 주소를 조심하는 역량입니다.",
+      guide: {
+        steps: [
+          "문자에 포함된 파란색 영어 주소(링크)는 절대로 먼저 누르지 않습니다.",
+          "가족이라며 문화상품권이나 송금을 요구하면 반드시 직접 전화를 걸어 목소리를 확인합니다.",
+          "의심스러울 때는 즉시 국번 없이 112나 1332로 전화해 상담받습니다."
+        ],
+        videoUrl: "https://www.youtube.com/embed/5m3l3qPqYqg?autoplay=1"
+      }
+    },
+    {
+      id: 10,
+      cat: "스마트폰 관리",
+      title: "글자 크기를 보기 좋게 키우거나 화면 밝기, 벨소리 음량을 조절할 수 있나요?",
+      sub: "내 눈과 귀에 편하도록 스마트폰 설정을 맞추는 기능입니다.",
+      guide: {
+        steps: [
+          "톱니바퀴 모양의 '설정' 앱을 누릅니다.",
+          "'디스플레이' 메뉴로 들어가서 '글자 크기와 스타일'을 누릅니다.",
+          "아래 조절 점을 오른쪽으로 끌어 눈에 편안한 큰 글씨로 맞춥니다."
+        ],
+        videoUrl: "https://www.youtube.com/embed/kJQP7kiw5Fk?autoplay=1"
+      }
+    }
+  ];
+
+  /* ============================================================
+     2. 앱 상태 관리 (State)
+  ============================================================ */
+  const state = {
+    screen: 'LOGIN', // LOGIN | QUIZ | RESULT
+    userName: '',
+    currentIndex: 0,
+    answers: {}, // questionId: score (10, 5, 0)
+    ttsEnabled: true
+  };
+
+  /* ============================================================
+     3. 음성 안내 기능 (Web Speech API TTS)
+  ============================================================ */
+  function speakText(text) {
+    if (!state.ttsEnabled) return;
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel(); // 이전 음성 취소
+      const cleanText = text.replace(/<[^>]*>?/gm, ''); // 태그 제거
+      const utterance = new SpeechSynthesisUtterance(cleanText);
+      utterance.lang = 'ko-KR';
+      utterance.rate = 0.88; // 어르신 맞춤 살짝 느린 속도
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function toggleTTS() {
+    state.ttsEnabled = !state.ttsEnabled;
+    const btnText = document.getElementById('ttsText');
+    const btnIcon = document.getElementById('ttsIcon');
+    if (state.ttsEnabled) {
+      btnText.innerText = '소리 켬';
+      btnIcon.innerText = '🔊';
+      speakText('소리 안내를 켰습니다.');
+    } else {
+      btnText.innerText = '소리 끔';
+      btnIcon.innerText = '🔇';
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+    }
+  }
+
+  /* ============================================================
+     4. 화면 렌더링 로직
+  ============================================================ */
+  const mainContent = document.getElementById('main-content');
+
+  // [화면 1] 로그인 화면
+  function renderLogin() {
+    state.screen = 'LOGIN';
+    mainContent.innerHTML = `
+      <div class="login-box">
+        <div class="icon-welcome">👵📱👴</div>
+        <h1 class="login-title">스마트폰 사용,<br>얼마나 편하신가요?</h1>
+        <p class="login-desc">혼자서도 스마트폰을 잘 다루실 수 있도록<br>쉽고 친절하게 도와드립니다.</p>
+        
+        <div style="text-align:left; margin-top:10px;">
+          <label for="userNameInput" style="font-size:21px; font-weight:900; color:#1e293b; display:block; margin-bottom:8px;">
+            성함이나 별명을 적어주세요
+          </label>
+          <input 
+            type="text" 
+            id="userNameInput" 
+            class="input-name" 
+            placeholder="예: 김순자 또는 순자할머니" 
+            value="${state.userName}" 
+            maxlength="10"
+            autocomplete="off"
+          />
+        </div>
+
+        <button class="btn-large btn-primary" style="margin-top:10px;" onclick="startQuiz()">
+          진단 시작하기 ➔
+        </button>
+        <p style="font-size:17px; color:#64748b;">* 소중한 개인정보는 저장되지 않으니 안심하세요.</p>
+      </div>
+    `;
+
+    setTimeout(() => {
+      speakText("스마트폰 사용이 얼마나 편하신지 진단해 드립니다. 성함을 입력하시고 시작하기 버튼을 눌러주세요.");
+    }, 300);
+  }
+
+  function startQuiz() {
+    const input = document.getElementById('userNameInput');
+    const val = input.value.trim();
+    if (!val) {
+      alert("성함이나 부르기 편한 별명을 입력해 주세요.");
+      input.focus();
+      return;
+    }
+    state.userName = val;
+    state.currentIndex = 0;
+    state.answers = {};
+    renderQuiz();
+  }
+
+  // [화면 2] 질문 화면 (1화면 1질문)
+  function renderQuiz() {
+    state.screen = 'QUIZ';
+    const q = questionsData[state.currentIndex];
+    const total = questionsData.length;
+    const currentNum = state.currentIndex + 1;
+    const progressPercent = (currentNum / total) * 100;
+    const savedAnswer = state.answers[q.id];
+
+    mainContent.innerHTML = `
+      <!-- 진행률 표시 -->
+      <div class="progress-bar-wrap">
+        <div class="progress-text">
+          <span>질문 ${currentNum}번 / 총 ${total}개</span>
+          <span>진행률 ${Math.round(progressPercent)}%</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" style="width: ${progressPercent}%;"></div>
+        </div>
+      </div>
+
+      <!-- 질문 카드 -->
+      <div class="question-card">
+        <span class="question-category">${q.cat}</span>
+        <h2 class="question-title">${q.title}</h2>
+        <p class="question-sub">${q.sub}</p>
+      </div>
+
+      <!-- 선택지 3단계 -->
+      <div class="options-group">
+        <button class="option-btn ${savedAnswer === 10 ? 'selected' : ''}" onclick="selectOption(${q.id}, 10)">
+          <div class="check-circle">${savedAnswer === 10 ? '✓' : ''}</div>
+          <span>혼자서 잘할 수 있어요</span>
+        </button>
+
+        <button class="option-btn ${savedAnswer === 5 ? 'selected' : ''}" onclick="selectOption(${q.id}, 5)">
+          <div class="check-circle">${savedAnswer === 5 ? '✓' : ''}</div>
+          <span>도움을 받으면 할 수 있어요</span>
+        </button>
+
+        <button class="option-btn ${savedAnswer === 0 ? 'selected' : ''}" onclick="selectOption(${q.id}, 0)">
+          <div class="check-circle">${savedAnswer === 0 ? '✓' : ''}</div>
+          <span>아직은 어려워요</span>
+        </button>
+      </div>
+
+      <!-- 이전 / 다음 버튼 -->
+      <div class="nav-buttons">
+        ${state.currentIndex > 0 
+          ? `<button class="btn-large btn-secondary" style="flex:1;" onclick="prevQuestion()">⬅ 이전</button>` 
+          : ''}
+        <button class="btn-large btn-primary" style="flex:${state.currentIndex > 0 ? '2' : '1'};" onclick="nextQuestion()">
+          ${currentNum === total ? '결과 확인하기 ➔' : '다음 질문 ➔'}
+        </button>
+      </div>
+    `;
+
+    // 질문 음성 읽어주기
+    speakText(`질문 ${currentNum}번. ${q.title}`);
+  }
+
+  function selectOption(qId, score) {
+    state.answers[qId] = score;
+    // 답변 선택 시 질문 음성을 다시 읽지 않고 화면 선택 상태만 업데이트
+    const btns = document.querySelectorAll('.option-btn');
+    btns[0].className = `option-btn ${score === 10 ? 'selected' : ''}`;
+    btns[0].querySelector('.check-circle').innerText = score === 10 ? '✓' : '';
+
+    btns[1].className = `option-btn ${score === 5 ? 'selected' : ''}`;
+    btns[1].querySelector('.check-circle').innerText = score === 5 ? '✓' : '';
+
+    btns[2].className = `option-btn ${score === 0 ? 'selected' : ''}`;
+    btns[2].querySelector('.check-circle').innerText = score === 0 ? '✓' : '';
+  }
+
+  function prevQuestion() {
+    if (state.currentIndex > 0) {
+      state.currentIndex--;
+      renderQuiz();
+    }
+  }
+
+  function nextQuestion() {
+    const q = questionsData[state.currentIndex];
+    if (state.answers[q.id] === undefined) {
+      alert("세 가지 보기 중 하나를 선택해 주세요.");
+      return;
+    }
+
+    if (state.currentIndex < questionsData.length - 1) {
+      state.currentIndex++;
+      renderQuiz();
+    } else {
+      renderResult();
+    }
+  }
+
+  /* ============================================================
+     5. 결과 화면 (점수, 수준, 부족한 기능 사용법, 교육 추천)
+  ============================================================ */
+  function renderResult() {
+    state.screen = 'RESULT';
+
+    // 점수 자동 계산 (100점 만점)
+    let totalScore = 0;
+    const goodList = [];
+    const practiceList = [];
+
+    questionsData.forEach(q => {
+      const s = state.answers[q.id] ?? 0;
+      totalScore += s;
+      if (s === 10) {
+        goodList.push(q);
+      } else {
+        practiceList.push(q);
+      }
+    });
+
+    // 3단계 역량 수준 분류
+    let levelBadge = '';
+    let encouragement = '';
+
+    if (totalScore >= 80) {
+      levelBadge = '스마트폰 달인! 잘 활용해요 👏';
+      encouragement = `정말 훌륭하십니다! ${state.userName} 님은 스마트폰을 아주 지혜롭게 잘 쓰고 계십니다.`;
+    } else if (totalScore >= 50) {
+      levelBadge = '조금 더 연습해요 👍';
+      encouragement = `잘하고 계세요! 헷갈리는 몇 가지 기능만 조금씩 연습하시면 금방 능숙해지실 거예요.`;
+    } else {
+      levelBadge = '기초부터 차근차근 배워요 🌱';
+      encouragement = `처음이라 낯설 뿐입니다. 쉬운 사용 방법을 따라 하루 하나씩 연습해 보세요!`;
+    }
+
+    mainContent.innerHTML = `
+      <div class="result-section">
+        <!-- ① 디지털 역량 점수 -->
+        <div class="score-banner">
+          <div class="score-title">${state.userName} 님의 스마트폰 역량 점수</div>
+          <div class="score-number">${totalScore}<span style="font-size:32px; color:#64748b;">점</span></div>
+          
+          <!-- ② 활용 수준 및 격려 -->
+          <div class="score-badge">${levelBadge}</div>
+          <div class="encouragement-text">
+            “${encouragement}”
+          </div>
+        </div>
+
+        <!-- ③ 잘하고 있는 기능 -->
+        <div class="card-block">
+          <div class="card-block-title" style="color:#166534;">
+            <span>😊</span> 잘하고 계신 기능 (${goodList.length}개)
+          </div>
+          <div class="skill-tag-list">
+            ${goodList.length > 0 
+              ? goodList.map(item => `
+                <div class="skill-tag-item tag-good">
+                  <span>${item.cat} (${item.title.split(' ')[0]} 등)</span>
+                  <span>아주 잘함 ★</span>
+                </div>
+              `).join('')
+              : '<p style="color:#64748b; font-size:18px;">아직 서툴러도 괜찮습니다. 이제부터 배우시면 됩니다!</p>'
+            }
+          </div>
+        </div>
+
+        <!-- ④ 조금 더 연습할 기능 -->
+        <div class="card-block">
+          <div class="card-block-title" style="color:#991b1b;">
+            <span>💡</span> 조금 더 연습하면 좋은 기능 (${practiceList.length}개)
+          </div>
+          <div class="skill-tag-list">
+            ${practiceList.length > 0 
+              ? practiceList.map(item => `
+                <div class="skill-tag-item tag-practice">
+                  <span>${item.cat}</span>
+                  <span>연습 필요 ✎</span>
+                </div>
+              `).join('')
+              : '<p style="color:#166534; font-size:18px;">모든 기능을 스스로 능숙하게 다루고 계십니다!</p>'
+            }
+          </div>
+        </div>
+
+        <!-- ⑤ 부족한 기능의 단계별 사용방법 & 영상 보기 -->
+        ${practiceList.length > 0 ? `
+          <div class="card-block" style="border-color:#f59e0b;">
+            <div class="card-block-title" style="color:#b45309;">
+              <span>📖</span> 꼭 알아두면 편리한 쉬운 사용방법
+            </div>
+            <p style="font-size:18px; color:#64748b; margin-bottom:16px;">
+              부족하다고 응답하신 기능 중 대표적인 방법을 차근차근 따라 해보세요.
+            </p>
+            
+            <div class="guide-accordion">
+              ${practiceList.map(item => `
+                <div class="guide-card">
+                  <div class="guide-card-header">
+                    <span>${item.cat} 쉽게 쓰기</span>
+                    <span style="font-size:18px; color:var(--primary);">실습안내</span>
+                  </div>
+                  <div class="guide-card-body">
+                    ${item.guide.steps.map((step, idx) => `
+                      <div class="step-item">
+                        <div class="step-num">${idx + 1}</div>
+                        <div>${step}</div>
+                      </div>
+                    `).join('')}
+                    
+                    <button class="video-btn" onclick="openVideoModal('${item.cat} 영상 안내', '${item.guide.videoUrl}')">
+                      <span>▶</span> 영상으로 쉽게 보기
+                    </button>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        ` : ''}
+
+        <!-- ⑥ 추천 스마트폰 무료 교육 -->
+        <div class="card-block" style="background:#eff6ff; border-color:#93c5fd;">
+          <div class="card-block-title" style="color:#1d4ed8;">
+            <span>🎓</span> ${state.userName} 님을 위한 맞춤 추천 교육
+          </div>
+          <div style="font-size:19px; line-height:1.6; color:#1e293b;">
+            <strong>전국 어르신 디지털배움터 무료 교육</strong><br>
+            가까운 주민센터와 복지관에서 강사님이 1:1로 친절히 알려드립니다.
+            <div style="margin-top:12px; background:white; padding:14px; border-radius:12px;">
+              📞 <strong>교육 문의 전화: 1800-0096</strong><br>
+              (평일 오전 9시 ~ 오후 6시 통화료 무료)
+            </div>
+          </div>
+          <a href="tel:1800-0096" style="text-decoration:none; margin-top:14px; display:block;">
+            <button class="btn-large btn-primary" style="background:#1d4ed8; min-height:60px; font-size:22px;">
+              📞 무료 상담 전화 걸기
+            </button>
+          </a>
+        </div>
+
+        <!-- 다시 진단하기 버튼 -->
+        <button class="btn-large btn-secondary" onclick="restartTest()" style="margin-top:10px;">
+          🔄 처음부터 다시 진단하기
+        </button>
+      </div>
+    `;
+
+    // 최상단으로 스크롤 이동
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    speakText(`진단이 끝났습니다. ${state.userName}님의 점수는 ${totalScore}점입니다. ${encouragement}`);
+  }
+
+  function restartTest() {
+    state.currentIndex = 0;
+    state.answers = {};
+    renderLogin();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  /* ============================================================
+     6. 동영상 팝업 모달 제어
+  ============================================================ */
+  const videoModal = document.getElementById('video-modal');
+  const videoFrame = document.getElementById('video-frame');
+  const videoTitle = document.getElementById('video-modal-title');
+
+  function openVideoModal(title, url) {
+    videoTitle.innerText = title;
+    videoFrame.src = url;
+    videoModal.style.display = 'flex';
+  }
+
+  function closeVideoModal() {
+    videoFrame.src = '';
+    videoModal.style.display = 'none';
+  }
+
+  // 시작 시 로그인 화면 렌더링
+  window.addEventListener('DOMContentLoaded', () => {
+    renderLogin();
+  });
+</script>
+</body>
+</html>
